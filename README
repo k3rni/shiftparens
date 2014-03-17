@@ -1,0 +1,21 @@
+A prototype reimplementation of the shift-parenthesis concept, in Python.
+
+Uses parts of uinputmapper (to read from event devices), but that might be replaced with libevdev. Needs `xdotool` (install it from your distribution's repositories). Other than that, no external libraries.
+
+To run:
+
+1. check out the code
+2. check out uinputmapper somewhere
+3. run `make` in uinputmapper's root, to generate the symbols file
+4. from that place, copy the uinputmapper directory to shiftparens.
+5. run as root (or setup your input devices with proper permissions, I don't care)
+
+Usage:
+
+By default there are 5 mappings:
+
+* press and release LeftShift: `(`
+* press and release RightShift: `)`
+* first LeftShift then RightShift (released in either order): `()`
+* first RightShift then LeftShift: `)(`
+* press and release LeftCtrl: equivalent to pressing ESC
