@@ -4,6 +4,8 @@ Uses parts of uinputmapper (to read from event devices), but that might be repla
 Needs `xdotool` (install it from your distribution's repositories, and again, might be replaced with libxdo). 
 Other than that, no external dependencies.
 
+Similar projects: xcape, keydouble, actkbd, python-uinput.
+
 To run:
 
 1. check out the code
