@@ -1,6 +1,5 @@
 __all__ = ['UInputEmitter']
 
-
 from time import time, sleep
 from ctypes import CDLL, byref, c_void_p
 import uinputmapper
