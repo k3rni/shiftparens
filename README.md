@@ -6,11 +6,7 @@ Other than that, no external dependencies.
 
 Similar projects: xcape, keydouble, actkbd, python-uinput. Actkbd is closest to what I'm trying to achieve.
 
-To run:
-
-1. check out the code
-2. check which device in `/dev/input` is your keyboard, replace hardcoded /dev/input/event3 with the correct path
-3. run `parens.py` as root (or setup your input devices with proper permissions, I don't care)
+Either run `parens.py` as root, or configure udev permissions for `/dev/input/*` so you can read and write there. If it doesn't detect your keyboard properly (you have more than one), replace the detect call with the correct input device path.
 
 Usage:
 
