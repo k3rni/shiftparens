@@ -1,4 +1,4 @@
-A prototype reimplementation of the [shift-parenthesis concept](http://stevelosh.com/blog/2012/10/a-modern-space-cadet/#shift-parentheses) in Python.
+A prototype reimplementation of the [shift-parenthesis concept](http://stevelosh.com/blog/2012/10/a-modern-space-cadet/#shift-parentheses) in Python, for Linux only.
 
 Uses parts of uinputmapper (to read from event devices), but that might be replaced with libevdev someday. 
 Needs `xdotool` (install it from your distribution's repositories, and again, might be replaced with libxdo). 
