@@ -1,27 +1,33 @@
 #! /usr/bin/env python
 
-import uinputmapper
-import uinputmapper.linux_uinput
-from uinputmapper.cinput import *
-from uinputmapper.mapper import KeyMapper
-import select, subprocess
-from ctypes import CDLL, byref, c_void_p
+import select
 from itertools import izip
 from time import time, sleep
 from pprint import pprint
 from sys import stdout
-
-libc = CDLL('libc.so.6')
-libc.gettimeofday.argtypes = [c_void_p, c_void_p]
+from uinputmapper.cinput import *
+from emitters.xdotool import XdotoolEmitter
+from emitters.uinput import UInputEmitter
 
 class State:
     LETTERS = {KEY_LEFTSHIFT: 'lL', KEY_RIGHTSHIFT: 'rR',
             KEY_LEFTCTRL: 'cC', KEY_RIGHTCTRL: 'dD',
-            KEY_LEFTALT: 'aA', KEY_RIGHTALT: 'bB'}
+            KEY_LEFTALT: 'aA', KEY_RIGHTALT: 'bB',
+            KEY_LEFTMETA: 'wW', KEY_RIGHTMETA: 'vV',
+            KEY_SPACE: 'sS'}
+
     def __init__(self, emitter=None):
         self.tape = []
         self.timetape = []
         self.emitter = emitter
+        self.patterns = (
+            (['rlRL', 'rRlL'], 0.3, self.type, '()'),
+            (['lRLR', 'lLrR'], 0.3, self.type, ')('),
+            (['srSR'], 0.3, self.type, ')'),
+            (['lL'], 0.3, self.type, '('),
+            (['rR'], 0.3, self.type, ')'),
+            (['cC'], 0.3, self.key, 'Escape')
+        )
 
     def record(self, letters, state, tm):
         letter = letters[int(state)]
@@ -44,24 +50,16 @@ class State:
     def match(self, seq):
         return all([left == right for (left, right) in izip(self.tape, seq)])
 
-    def fast_enough(self, count):
-        return len(self.timetape) >= count and (self.timetape[0] - self.timetape[count-1] < 0.3)
+    def fast_enough(self, count, timeout=0.3):
+        return len(self.timetape) >= count and (self.timetape[0] - self.timetape[count-1] < timeout)
 
     def analyze_tape(self):
-        tape = self.tape
-        # TODO: read this from some config file.
-        if self.match('rlRL') or self.match('rRlL') and self.fast_enough(4):
-            self.type('()')
-        elif self.match('lrLR') or self.match('lLrR') and self.fast_enough(4):
-            self.type(')(')
-        elif self.match('lL') and self.fast_enough(2):
-            self.type('(')
-        elif self.match('rR') and self.fast_enough(2):
-            self.type(')')
-        elif self.match('cC') and self.fast_enough(2):
-            self.key("Escape")
-
-
+        # patterns must be sorted descending by length
+        for patterns, timeout, command, value in self.patterns:
+            if any((self.match(pat) and self.fast_enough(len(pat), timeout)) for pat in patterns):
+                command(value)
+                return
+    
     def type(self, keys):
         self.emitter.type(keys)
 
@@ -71,58 +69,6 @@ class State:
     def __str__(self):
         return '[%s]' % (''.join(self.tape))
 
-
-class EvdevEmitter:
-    # Tried emitting keys by writing to uinput. Not useful, cannot send shifted keys.
-    KEYSEQ = {
-        '(': [(KEY_LEFTSHIFT, 1), ('syn', 0), (KEY_9, 1), ('syn', 0), (KEY_9, 0), ('syn', 0), (KEY_LEFTSHIFT, 0)],
-        ')': [(KEY_LEFTSHIFT, 1), ('syn', 0), (KEY_0, 1), (KEY_0, 0), (KEY_LEFTSHIFT, 0)],
-        # '(': [(KEY_KPLEFTPAREN, 1), ('syn', 0), (KEY_KPLEFTPAREN, 0)],
-        "\033": [(KEY_ESC, 1), ('syn', 0), (KEY_ESC, 0)]
-    }
-
-    def __init__(self):
-        dev = self.dev = UInputDevice()
-        # Must expose first, setup later
-        dev.expose_event_type(EV_KEY)
-        dev.expose_event(EV_KEY, KEY_9)
-        dev.expose_event(EV_KEY, KEY_0)
-        dev.setup('ParenMapper%s' % (time()))
-
-    def emit_syn(self):
-        tmval = timeval()
-        libc.gettimeofday(byref(tmval), None)
-        ev = input_event(tmval, EV_SYN, SYN_REPORT, 0)
-        dev.fire_event(ev)
-        
-    def type(self, keys):
-        for chr in keys:
-            for (ev_code, ev_value) in KEYSEQ[chr]:
-                if ev_code == 'syn':
-                    self.emit_syn()
-                    sleep(0.001)
-                else:
-                    tmval = timeval()
-                    libc.gettimeofday(byref(tmval), None)
-                    print "%d:%d %s %s %d" % (tmval.tv_sec, tmval.tv_usec, rev_events[EV_KEY], rev_event_keys[EV_KEY][ev_code], ev_value)
-                    ev = input_event(tmval, EV_KEY, ev_code, ev_value)
-                    dev.fire_event(ev)
-            self.emit_syn()
-    
-    def key(self, symbol):
-        pass
-
-class XdotoolEmitter:
-    def key(self, symbol):
-        print "KEY %s" % symbol
-        self.xdotool('key', symbol)
-
-    def type(self, keys):
-        print "TYPING %r" % keys
-        self.xdotool('type', keys)
-
-    def xdotool(self, *args):
-        subprocess.call(['xdotool'] + list(args), shell=False)
 
 state = State(XdotoolEmitter())
 
