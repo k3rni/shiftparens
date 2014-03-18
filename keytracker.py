@@ -1,5 +1,7 @@
 __all__ = ['KeyTracker']
 
+from itertools import izip
+
 class KeyTracker:
     def __init__(self, emitter=None):
         self.tape = []

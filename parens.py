@@ -1,7 +1,6 @@
 #! /usr/bin/env python
 
-import select
-from itertools import izip
+import select, glob, os.path
 from time import time 
 from pprint import pprint
 from uinputmapper.cinput import *
@@ -10,13 +9,21 @@ from emitters.xdotool import XdotoolEmitter
 from emitters.uinput import UInputEmitter
 from keytracker import KeyTracker
 
+def detect_keyboard_device():
+    for devpath in glob.glob('/sys/class/input/event*'):
+        uev = os.path.join(devpath, 'device/uevent')
+        props = dict(line.strip().split('=') for line in open(uev))
+        if 'KEY' in props and 'LED' in props:
+            # has keys, has leds, it's a keyboard. TODO: better logic
+            return os.path.join('/dev/input', os.path.basename(devpath))
+
 LETTERS = {KEY_LEFTSHIFT: 'lL', KEY_RIGHTSHIFT: 'rR',
     KEY_LEFTCTRL: 'cC', KEY_RIGHTCTRL: 'dD',
     KEY_LEFTALT: 'aA', KEY_RIGHTALT: 'bB',
     KEY_LEFTMETA: 'wW', KEY_RIGHTMETA: 'vV',
     KEY_SPACE: 'sS'}
 
-keyboard = InputDevice('/dev/input/event3') # TODO: cmdline
+keyboard = InputDevice(detect_keyboard_device()) # TODO: cmdline
 kt = KeyTracker(XdotoolEmitter())
 
 poll_obj, poll_mask = (select.epoll, select.EPOLLIN)

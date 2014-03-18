@@ -10,7 +10,7 @@ To run:
 
 1. check out the code
 2. check which device in `/dev/input` is your keyboard, replace hardcoded /dev/input/event3 with the correct path
-3. run as root (or setup your input devices with proper permissions, I don't care)
+3. run `parens.py` as root (or setup your input devices with proper permissions, I don't care)
 
 Usage:
 
