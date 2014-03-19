@@ -199,7 +199,6 @@ class UInputDevice(object):
         """
         Exposes a specific event type.
         """
-        print "%d %d %d" % (self._f, UI_SET_EVBIT, evt)
         fcntl.ioctl(self._f, UI_SET_EVBIT, evt)
 
     def expose_event(self, evt, evk):
@@ -207,7 +206,6 @@ class UInputDevice(object):
         Exposes an event; make sure the event type is exposed as well.
         """
         evbit = evbits[evt]
-        print "%d %d %d"  %(self._f, evbit, evk)
         fcntl.ioctl(self._f, evbit, evk)
 
     def set_absprop(self, absk, _max=0, _min=0, fuzz=0, flat=0):

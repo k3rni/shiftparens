@@ -3,7 +3,8 @@ __all__ = ['KeyTracker']
 from itertools import izip
 
 class KeyTracker:
-    def __init__(self, emitter=None):
+    def __init__(self, emitter=None, quiet=False):
+        self.quiet = quiet
         self.tape = []
         self.timetape = []
         self.emitter = emitter 
