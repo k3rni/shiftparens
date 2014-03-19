@@ -4,7 +4,7 @@ Uses parts of uinputmapper (to read from event devices), but that might be repla
 Needs `xdotool` (install it from your distribution's repositories, and again, might be replaced with libxdo). 
 Other than that, no external dependencies.
 
-Similar projects: xcape, keydouble, actkbd, python-uinput. Actkbd is closest to what I'm trying to achieve.
+Similar projects: [xcape](http://github.com/alols/xcape), [keydouble](http://github.com/baskerville/keydouble), [actkbd](http://users.softlab.ece.ntua.gr/~thkala/projects/actkbd/), [python-uinput](http://tjjr.fi/sw/python-uinput). Xcape works exactly like the original concept, but is restricted to X11 and single keys. Actkbd can process sequences, but not precise push-release ones. Python-uinput can only generate, not read keys.
 
 Either run `parens.py` as root, or configure udev permissions for `/dev/input/*` so you can read and write there. If it doesn't detect your keyboard properly (you have more than one), replace the detect call with the correct input device path.
 
