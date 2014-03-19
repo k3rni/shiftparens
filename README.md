@@ -2,7 +2,7 @@ A prototype reimplementation of the [shift-parenthesis concept](http://stevelosh
 
 Uses parts of uinputmapper (to read from event devices), but that might be replaced with libevdev someday. 
 Needs `xdotool` (install it from your distribution's repositories, and again, might be replaced with libxdo). 
-Other than that, no external dependencies.
+Requires [python-daemon](https://pypi.python.org/pypi/python-daemon/) if you want to run daemonized.
 
 Similar projects: [xcape](http://github.com/alols/xcape), [keydouble](http://github.com/baskerville/keydouble), [actkbd](http://users.softlab.ece.ntua.gr/~thkala/projects/actkbd/), [python-uinput](http://tjjr.fi/sw/python-uinput). Xcape works exactly like the original concept, but is restricted to X11 and single keys. Actkbd can process sequences, but not precise push-release ones. Python-uinput can only generate, not read keys.
 
