@@ -1,9 +1,9 @@
 #! /usr/bin/env python
 
 import select, glob, os.path
+import argparse
 from time import time 
 from pprint import pprint
-import argparse
 from uinputmapper.cinput import *
 from emitters import EMITTERS
 from keytracker import KeyTracker
