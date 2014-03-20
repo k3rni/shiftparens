@@ -1,3 +1,5 @@
+__all__ = ['XTestEmitter', 'XTestException']
+
 from ctypes import CDLL, c_void_p, c_int, c_char_p, c_ulong, c_uint, byref, POINTER, c_bool
 p_int = POINTER(c_int)
 
@@ -5,14 +7,20 @@ class XTestException(Exception):
     pass
 
 class XTestEmitter:
-    def __init__(self, quiet=False):
-        self.quiet = quiet
+    def __init__(self, options):
+        self.quiet = options.quiet
+        self.display_str = options.display
         self.setup_x11()
         self.setup_xtest()
         self.xtest_start()
 
+    @classmethod
+    def setup_argparse(cls, parser):
+        parser.add_argument('-d', '--display', metavar='DISPLAY', dest='display', help="X display to use", default="")
+
     def __del__(self):
-        self.xtest_stop()
+        if hasattr(self, 'xtest'):
+            self.xtest_stop()
 
     def setup_x11(self):
         self.x11 = CDLL('libX11.so')
@@ -24,7 +32,9 @@ class XTestEmitter:
         self.x11.XKeysymToKeycode.restype = c_int
         self.x11.XSync.argtypes = [c_void_p, c_bool]
         # TODO: pass options here
-        self.display = self.x11.XOpenDisplay("")
+        self.display = self.x11.XOpenDisplay(self.display_str)
+        if self.display is None:
+            raise XTestException("Cannot open display %s" % self.display_str)
 
     def setup_xtest(self):
         self.xtest = CDLL('libXtst.so')
@@ -68,7 +78,7 @@ class XTestEmitter:
         self.x11.XSync(self.display, False)
 
     def log(self, message):
-        if quiet: return
+        if self.quiet: return
         print message
 
 

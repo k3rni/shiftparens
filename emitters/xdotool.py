@@ -3,8 +3,8 @@ __all__ = ['XdotoolEmitter']
 import subprocess
 
 class XdotoolEmitter:
-    def __init__(self, quiet=False):
-        self.quiet = quiet
+    def __init__(self, options):
+        self.quiet = options.quiet
         self.log("Using XDo emitter")
 
     def key(self, symbol):

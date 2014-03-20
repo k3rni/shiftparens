@@ -16,3 +16,12 @@ By default there are 5 mappings:
 * first LeftShift then RightShift (released in either order): `()`
 * first RightShift then LeftShift: `)(`
 * press and release LeftCtrl: equivalent to pressing ESC
+
+Emitters:
+
+Emitters are modules which do the actual insertion of events into what you're typing. At the moment, you can choose from several:
+
+* xdo: uses xdotool command-line app to send X11 events
+* uinput: emits keys via kernel input ioctls, no dependencies except write permissions on /dev/input
+* xtest: FFI interface to libXTest, no dependencies, your X server probably supports XTest and has it enabled
+* vim: sends commands to a vim instance
