@@ -30,11 +30,17 @@ class SetEmitter(argparse.Action):
             group = parser.add_argument_group('Options for %s' % values)
             EMITTERS[values].setup_argparse(group)
 
-parser = argparse.ArgumentParser(description="Capture and modify key sequences")
-parser.add_argument('-k', '--keyboard', metavar='DEV', dest="keyboard_device", help="Override autodetected keyboard device. Pass a path under /dev/input")
-parser.add_argument('-e', '--emitter', metavar='MODULE', action=SetEmitter, help="Select emitter module. Available ones are: %s" % ', '.join(EMITTERS.keys()), default="xdo", choices=EMITTERS.keys())
-parser.add_argument('-D', '--daemon', action='store_true', dest='daemon', help="Daemonize (implies -q)")
-parser.add_argument('-q', '--quiet', action='store_true', dest='quiet', help="Don't log anything to stdout")
+parser = argparse.ArgumentParser(description="Turn your shift keys into parentheses")
+parser.add_argument('-k', '--keyboard', metavar='DEV', dest="keyboard_device", 
+    help="Override autodetected keyboard device. Pass a path under /dev/input.")
+parser.add_argument('-e', '--emitter', metavar='MODULE', action=SetEmitter, 
+    help="""Select emitter module. Default: %%(default)s.
+    Available emitters: %s. 
+    With this option, --help also displays the emitter's options.""" % ', '.join(EMITTERS.keys()), default="xdo", choices=EMITTERS.keys())
+parser.add_argument('-D', '--daemon', action='store_true', dest='daemon', 
+    help="Daemonize (implies -q).")
+parser.add_argument('-q', '--quiet', action='store_true', dest='quiet', 
+    help="Don't log anything to stdout.")
 
 def main(args, rest):
     keyboard = InputDevice(args.keyboard_device or detect_keyboard_device()) 
