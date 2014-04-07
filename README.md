@@ -1,9 +1,9 @@
 # Shiftparens
 
-A prototype reimplementation of the [shift-parenthesis concept](http://stevelosh.com/blog/2012/10/a-modern-space-cadet/#shift-parentheses) in Python, for Linux only.
+A simple reimplementation of the [shift-parenthesis concept](http://stevelosh.com/blog/2012/10/a-modern-space-cadet/#shift-parentheses) in Python, for Linux only.
 
 Uses parts of uinputmapper (to read from event devices), but that might be replaced with libevdev someday. 
-Uses `xdotool` if you choose it as provider (install it from your distribution's repositories, and again, might be replaced with libxdo). Requires [python-daemon](https://pypi.python.org/pypi/python-daemon/) if you want to run daemonized.
+Uses `xdotool` if you choose it as emitter (install it from your distribution's repositories). Requires [python-daemon](https://pypi.python.org/pypi/python-daemon/) if you want to run daemonized.
 
 ## Rationale
 
@@ -11,7 +11,7 @@ Similar projects: [xcape](http://github.com/alols/xcape), [keydouble](http://git
 
 # Usage
 
-Either run `parens.py` as root, or configure udev permissions for `/dev/input/*` so you can read and write there (refer to [this stackexchange post](http://unix.stackexchange.com/questions/39370/how-to-reload-udev-rules-without-reboot)). If it doesn't detect your keyboard properly (you have more than one), you can pass the correct device with a command-line option.
+Run `python parens.py`. If you see "permission denied" errors, you might need to [configure your udev](wiki/UDev-setup). In case it doesn't detect your keyboard properly (you have more than one), pass the correct device path with a command-line option.
 
 
 By default there are 5 mappings:
