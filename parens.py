@@ -47,10 +47,11 @@ def main(args, rest):
     emclass = EMITTERS[args.emitter]
 
     # Parse and merge extra options
-    parser = argparse.ArgumentParser()
-    emclass.setup_argparse(parser)
-    em_args = parser.parse_args(rest)
-    vars(args).update(vars(em_args)) # vars(X) exposes underlying dict
+    if hasattr(emclass, 'setup_argparse'):
+      parser = argparse.ArgumentParser()
+      emclass.setup_argparse(parser)
+      em_args = parser.parse_args(rest)
+      vars(args).update(vars(em_args)) # vars(X) exposes underlying dict
 
     em = emclass(args)
     kt = KeyTracker(em, quiet=args.quiet)
