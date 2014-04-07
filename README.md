@@ -11,7 +11,7 @@ Similar projects: [xcape](http://github.com/alols/xcape), [keydouble](http://git
 
 # Usage
 
-Run `python parens.py`. If you see "permission denied" errors, you might need to [configure your udev](wiki/UDev-setup). In case it doesn't detect your keyboard properly (you have more than one), pass the correct device path with a command-line option.
+Run `python parens.py`. If you see "permission denied" errors, you might need to [configure your udev](/../../wiki/UDev-setup). In case it doesn't detect your keyboard properly (you have more than one), pass the correct device path with a command-line option.
 
 
 By default there are 5 mappings:
