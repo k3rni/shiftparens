@@ -23,7 +23,7 @@ class VimEmitter:
         # define a function for typing text ONLY if vim has focus and is in insert mode
         # doubles for sending key symbols, with mode='m'
         subprocess.call(['vim', '--servername', self.server,
-            '--remote-send', ':function! Feedinsert(text, mode)<CR>if g:vim_has_focus == 1 && mode() =~ "^[ir]$"<CR>call feedkeys(a:text, a:mode)<CR>endif<CR>endfunction<CR><CR><CR>'])
+            '--remote-send', ':function! Feedinsert(text, mode)<CR>if g:vim_has_focus == 1 && mode() =~ "^[iR]$"<CR>call feedkeys(a:text, a:mode)<CR>endif<CR>endfunction<CR><CR><CR>'])
 
     def feed(self, text, remap=False):
         # see :help feedkeys
