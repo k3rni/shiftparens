@@ -29,4 +29,4 @@ Emitters are modules which do the actual insertion of events into what you're ty
 * xdo: uses xdotool command-line app to send X11 events
 * uinput: emits keys via kernel input ioctls, no dependencies except write permissions on /dev/input
 * xtest: FFI interface to libXTest, no dependencies, your X server probably supports XTest and has it enabled
-* vim: sends commands to a Vim instance. Only if Vim has focus and is in insert or replace mode. Optionally configure Vim to [automatically](../../wiki/Autostart-with-Vim) run it
+* vim: sends commands to a Vim instance. Only if Vim has focus and is in insert or replace mode. Optionally configure Vim to [automatically](../../wiki/Autostart-with-Vim) run it. If you have trouble getting it working, see [Vim troubleshooting](../../wiki/Vim-troubleshooting).
